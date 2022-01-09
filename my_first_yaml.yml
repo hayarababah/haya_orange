@@ -1,0 +1,12 @@
+---
+- hosts: SOI_bscsprod
+  tasks:
+    - name: multiline shell command
+      shell: >
+         #!/bin/bash
+       /JTGWMCMSPROD/applications/bscsprod/workdata/alcatel_scripts/BSCSAPPS status
+      register: stdout
+
+    - name: debug output
+      debug: msg={{ stdout }}
+
