@@ -1,0 +1,74 @@
+
+- hosts: SOI_bscsprod 
+  tasks:
+    - shell: ". ./.bash_profile;/JTGWMCMSPROD/applications/bscsprod/workdata/alcatel_scripts/BSCSAPPS NAMING_SERVICE status"
+      args:
+        executable: /bin/bash
+      register: NS_status
+    - debug:
+          var: NS_status.stdout_lines
+    - shell: ". ./.bash_profile;/JTGWMCMSPROD/applications/bscsprod/workdata/alcatel_scripts/BSCSAPPS status | grep NAMING_SERVICE | awk {'pri
+nt $3'}"
+      args:
+        executable: /bin/bash
+#      ignore_errors: yes
+#      changed_when: false
+      register: awk_status
+
+    - debug: msg="Naming Service PID value =  {{ awk_status.stdout }}"
+    - debug: msg="awk_status.stdout != '' = {{ awk_status.stdout != ''}}"
+
+    - shell: ". ./.bash_profile;/JTGWMCMSPROD/applications/bscsprod/workdata/alcatel_scripts/BSCSAPPS NAMING_SERVICE stop" 
+      args:
+        executable: /bin/bash
+      when: awk_status.stdout != "{{ awk_status.stdout != ''}}"
+    - shell: ". ./.bash_profile;/JTGWMCMSPROD/applications/bscsprod/workdata/alcatel_scripts/BSCSAPPS FEDFACTORY status"
+      args:
+        executable: /bin/bash
+      register: NS_status2
+    - debug:
+          var: NS_status2.stdout_lines
+
+## FEDFACTORY SOI STOP ####################
+
+    - shell: ". ./.bash_profile;/JTGWMCMSPROD/applications/bscsprod/workdata/alcatel_scripts/BSCSAPPS status | grep FEDFACTORY | awk {'pri
+nt $3'}"
+      args:
+        executable: /bin/bash
+#      ignore_errors: yes
+#      changed_when: false
+      register: awk_status2
+
+    - debug: msg="Naming Service PID value =  {{ awk_status2.stdout }}"
+    - debug: msg="awk_status2.stdout != '' = {{ awk_status2.stdout != ''}}"
+
+    - shell: ". ./.bash_profile;/JTGWMCMSPROD/applications/bscsprod/workdata/alcatel_scripts/BSCSAPPS FEDFACTORY stop"
+      args:
+        executable: /bin/bash
+      when: awk_status2.stdout != "{{ awk_status2.stdout != ''}}"
+
+######CMS SOI STOP #######################
+
+    - shell: ". ./.bash_profile;/JTGWMCMSPROD/applications/bscsprod/workdata/alcatel_scripts/BSCSAPPS CMS status"
+      args:
+        executable: /bin/bash
+      register: NS_status3
+    - debug:
+          var: NS_status3.stdout_lines
+    - shell: ". ./.bash_profile;/JTGWMCMSPROD/applications/bscsprod/workdata/alcatel_scripts/BSCSAPPS status | grep CMS | awk {'pri
+nt $3'}"
+      args:
+        executable: /bin/bash
+#      ignore_errors: yes
+#      changed_when: false
+      register: awk_status3
+
+    - debug: msg="Naming Service PID value =  {{ awk_status3.stdout }}"
+    - debug: msg="awk_status3.stdout != '' = {{ awk_status2.stdout != ''}}"
+
+    - shell: ". ./.bash_profile;/JTGWMCMSPROD/applications/bscsprod/workdata/alcatel_scripts/BSCSAPPS CMS stop"
+      args:
+        executable: /bin/bash
+      when: awk_status3.stdout != "{{ awk_status3.stdout != ''}}"
+
+
